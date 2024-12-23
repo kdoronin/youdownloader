@@ -1,0 +1,5 @@
+yt-dlp>=2023.12.30
+PyQt6>=6.5.0
+pytube>=15.0.0
+pyinstaller>=6.3.0
+dmgbuild>=1.6.1 
