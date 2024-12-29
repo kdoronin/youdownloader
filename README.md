@@ -25,8 +25,7 @@ A cross-platform desktop application for downloading YouTube videos in the highe
 
 #### Windows
 1. Download the latest `YouTubeDownloader.exe` from the releases page
-2. Run the installer
-3. Launch the application from the Start menu
+2. Run the application directly - no installation needed
 
 #### Linux
 1. Download the latest `YouTubeDownloader.AppImage` from the releases page
@@ -60,10 +59,10 @@ pip install -r requirements.txt
 4. Run the application:
 ```bash
 # Run GUI version
-python youtube_downloader_gui.py
+python run.py
 
 # Run command-line version
-python youtube_downloader.py <youtube_url>
+python src/main.py <youtube_url>
 ```
 
 ## Building from Source
@@ -110,15 +109,23 @@ dmgbuild -s dmg_settings.py "YouTube Downloader" YouTubeDownloader.dmg
 
 #### Windows
 ```bash
-pyinstaller youtube_downloader.spec
+# Install PyInstaller if not already installed
+pip install pyinstaller
+
+# Build standalone executable
+pyinstaller --clean --onefile --windowed ^
+    --icon=icon.ico ^
+    --add-data "icon.ico;." ^
+    --add-data "src;src" ^
+    --name "YouTubeDownloader" ^
+    run.py
 ```
 
-#### Linux
-```bash
-pyinstaller youtube_downloader.spec
-```
+The Windows build process requires:
+- Python 3.8 or higher
+- Visual Studio Build Tools with Windows 10 SDK
 
-The compiled applications will be available in the `dist` directory.
+The standalone executable will be created in the `dist` directory as `YouTubeDownloader.exe`.
 
 ## Usage
 
