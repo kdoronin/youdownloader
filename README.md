@@ -74,17 +74,29 @@ python src/main.py <youtube_url>
 - Virtual environment (recommended)
 - Platform-specific build tools:
   - macOS: Xcode Command Line Tools
-  - Windows: Visual Studio Build Tools
+  - Windows: Visual Studio Build Tools with Windows 10 SDK
   - Linux: build-essential package
 
 ### Building Steps
 
-1. Install build dependencies:
+1. Create and activate virtual environment:
+```bash
+# Create virtual environment
+python -m venv venv
+
+# On Windows
+venv\Scripts\activate
+
+# On macOS/Linux
+source venv/bin/activate
+```
+
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Generate application icon (macOS only):
+3. Generate application icon (macOS only):
 ```bash
 mkdir icon.iconset
 convert icon.svg -resize 16x16 icon.iconset/icon_16x16.png
@@ -96,7 +108,7 @@ convert icon.svg -resize 512x512 icon.iconset/icon_512x512.png
 iconutil -c icns icon.iconset
 ```
 
-3. Build the application:
+4. Build the application:
 
 #### macOS
 ```bash
@@ -109,23 +121,41 @@ dmgbuild -s dmg_settings.py "YouTube Downloader" YouTubeDownloader.dmg
 
 #### Windows
 ```bash
-# Install PyInstaller if not already installed
-pip install pyinstaller
-
 # Build standalone executable
-pyinstaller --clean --onefile --windowed ^
-    --icon=icon.ico ^
-    --add-data "icon.ico;." ^
-    --add-data "src;src" ^
-    --name "YouTubeDownloader" ^
-    run.py
+pyinstaller youtube_downloader.spec
 ```
 
 The Windows build process requires:
 - Python 3.8 or higher
 - Visual Studio Build Tools with Windows 10 SDK
+- Active virtual environment with installed dependencies
 
-The standalone executable will be created in the `dist` directory as `YouTubeDownloader.exe`.
+The standalone executable will be created in the `dist/YouTube Downloader` directory. You need to distribute the entire directory as it contains required resources.
+
+Note for Windows users: If Windows Defender shows a warning, you can:
+1. Click "More info" and then "Run anyway"
+2. Add the application to Windows Defender exclusions
+3. The application is safe but unsigned. We're working on getting a code signing certificate.
+
+### Running from Source
+
+1. Activate virtual environment (if not already activated):
+```bash
+# On Windows
+venv\Scripts\activate
+
+# On macOS/Linux
+source venv/bin/activate
+```
+
+2. Run the application:
+```bash
+# Run GUI version
+python run.py
+
+# Run command-line version
+python src/main.py <youtube_url>
+```
 
 ## Usage
 
