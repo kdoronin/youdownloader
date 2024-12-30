@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                             QFileDialog, QMessageBox, QComboBox)
 from PyQt6.QtCore import Qt
 from src.core.downloader import DownloaderThread
+import re
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -13,6 +14,15 @@ class MainWindow(QMainWindow):
         self.available_heights = []
         self.video_info = None
         self.setup_ui()
+
+    def clean_youtube_url(self, url):
+        """Remove playlist parameters from YouTube URL"""
+        # Extract video ID
+        video_id_match = re.search(r'(?:v=|/)([0-9A-Za-z_-]{11}).*', url)
+        if video_id_match:
+            video_id = video_id_match.group(1)
+            return f'https://www.youtube.com/watch?v={video_id}'
+        return url
 
     def setup_ui(self):
         central_widget = QWidget()
@@ -87,7 +97,7 @@ class MainWindow(QMainWindow):
         layout.addStretch()
 
     def check_formats(self):
-        url = self.url_input.text().strip()
+        url = self.clean_youtube_url(self.url_input.text().strip())
         save_path = self.location_input.text().strip()
 
         if not url:
@@ -159,7 +169,7 @@ class MainWindow(QMainWindow):
             self.location_input.setText(folder)
 
     def start_download(self):
-        url = self.url_input.text().strip()
+        url = self.clean_youtube_url(self.url_input.text().strip())
         save_path = self.location_input.text().strip()
         selected_height = self.quality_combo.currentData()
         custom_title = self.title_input.text().strip()
